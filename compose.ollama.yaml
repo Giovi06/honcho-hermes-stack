@@ -1,0 +1,30 @@
+# Optional all-container inference for Linux servers.
+# Do not use this on macOS for normal work: native Ollama can use Apple Metal,
+# while the Docker VM path is typically CPU-bound.
+services:
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "127.0.0.1:11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+
+  ollama-models:
+    image: ollama/ollama:latest
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+      LOCAL_CHAT_MODEL: ${LOCAL_CHAT_MODEL}
+      LOCAL_EMBEDDING_MODEL: ${LOCAL_EMBEDDING_MODEL}
+    depends_on:
+      ollama:
+        condition: service_started
+    entrypoint: ["/bin/sh", "-ec"]
+    command: |
+      until ollama list >/dev/null 2>&1; do sleep 2; done
+      ollama pull "$${LOCAL_CHAT_MODEL}"
+      ollama pull "$${LOCAL_EMBEDDING_MODEL}"
+    restart: "no"
+
+volumes:
+  ollama-data:
