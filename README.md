@@ -2,7 +2,7 @@
 
 A reproducible, **pinned** self-hosted Honcho deployment for Hermes Agent:
 
-- Honcho API and Deriver worker built from upstream `plastic-labs/honcho` **v3.0.12** (Git submodule)
+- Honcho API and Deriver worker built from a reviewed, pinned upstream `plastic-labs/honcho` commit `2163ab1a` (Git submodule)
 - PostgreSQL 15 with `pgvector`, persistent named volume
 - Redis with AOF persistence, persistent named volume
 - localhost-only host ports by default
@@ -52,6 +52,7 @@ curl http://127.0.0.1:11434/v1/models
 
 ```bash
 docker compose up -d --build
+# `embedding-schema` runs once before the API; it configures pgvector for 768-dim local embeddings.
 docker compose ps
 ./scripts/verify.sh
 ```

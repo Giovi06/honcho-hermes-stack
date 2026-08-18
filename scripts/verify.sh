@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# Compose receives .env automatically; source it here so database checks use
+# the generated values too. This project intentionally generates simple shell-safe values.
+set -a
+source .env
+set +a
 base_url="${HONCHO_URL:-http://localhost:8000}"
 
 echo "1/4 API health"
