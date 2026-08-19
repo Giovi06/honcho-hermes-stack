@@ -14,6 +14,12 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 id "$HERMES_USER" >/dev/null
 
+# Earlier vault-skill provisioning may have created the profile parent as root.
+# Hermes' official installer runs as the restricted user and must own this
+# profile tree; it does not grant that user access outside its own home.
+install -d -o "$HERMES_USER" -g "$HERMES_USER" -m 0750 "$HERMES_HOME"
+chown -R "$HERMES_USER:$HERMES_USER" "$HERMES_HOME"
+
 if ! command -v node >/dev/null || ! command -v npm >/dev/null; then
   apt-get update
   apt-get install -y nodejs npm
