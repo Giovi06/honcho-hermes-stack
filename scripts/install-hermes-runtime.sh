@@ -26,11 +26,13 @@ if ! command -v node >/dev/null || ! command -v npm >/dev/null; then
 fi
 
 if [ ! -x "$HERMES_BIN" ]; then
+  # Do not inherit the administrator staging directory: uv treats a nearby
+  # .venv as a project environment and may be unable to inspect it as hermes.
   runuser -u "$HERMES_USER" -- env \
     HOME="$HERMES_OS_HOME" \
     HERMES_HOME="$HERMES_HOME" \
     PATH="$HERMES_OS_HOME/.local/bin:/usr/local/bin:/usr/bin:/bin" \
-    bash -c 'curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash'
+    bash -c 'cd "$HOME" && curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash'
 fi
 
 # Install web, pseudo-terminal and messaging dependencies for remote Desktop + Telegram.
