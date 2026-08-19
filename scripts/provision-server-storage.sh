@@ -21,6 +21,7 @@ usermod -aG "$VAULT_GROUP" "$ADMIN_USER"
 
 install -d -o "$HERMES_USER" -g "$VAULT_GROUP" -m 2770 /srv/hermes/vault
 install -d -o "$HERMES_USER" -g "$VAULT_GROUP" -m 2770 /srv/obsidian/config
+install -d -o "$HERMES_USER" -g "$VAULT_GROUP" -m 2770 /srv/syncthing/config
 install -d -o "$HERMES_USER" -g "$HERMES_USER" -m 0750 /srv/hermes/home
 
 printf 'Provisioned restricted user and vault storage.\n'
