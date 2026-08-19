@@ -77,6 +77,28 @@ Start a **new** Hermes session after setup. Tell it a unique preference, wait ab
 docker compose logs --tail=100 deriver
 ```
 
+# Optional deployment assets
+
+- `compose.ollama.yaml` — optional all-container Ollama for Ubuntu
+- `compose.obsidian.yaml` — isolated browser-accessed Obsidian UI
+- `compose.syncthing.yaml` — optional Mac/server vault synchronization between paired devices
+- `vault-seed/` — versioned Markdown folder layout and templates
+- `scripts/init-vault.py` — non-destructive vault initialization
+- `scripts/provision-server-storage.sh` — restricted Hermes Unix user plus vault permissions
+- `scripts/backup-vault.sh` / `scripts/restore-vault-check.sh` — filesystem backup and restore verification
+- `hermes-skill/project-knowledge-base/` — installable Hermes project-documentation behavior
+
+## Obsidian and synchronized vault
+
+```bash
+# local validation
+python3 scripts/init-vault.py --vault "$PWD/runtime/vault"
+docker compose -f compose.obsidian.yaml up -d
+# browse https://localhost:3001 and choose /vault
+```
+
+The Obsidian GUI binds to localhost only and must be accessed remotely through SSH forwarding in phase 1. It is intentionally on a separate Docker network from Honcho. See [docs/obsidian-and-sync.md](docs/obsidian-and-sync.md) for SSH, Syncthing and security details.
+
 ## Ubuntu Server deployment
 
 ### Recommended first production-like mode: all containers

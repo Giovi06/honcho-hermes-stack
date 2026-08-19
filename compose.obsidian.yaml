@@ -1,0 +1,28 @@
+# Optional browser-accessed Obsidian UI.
+# Deliberately isolated from Honcho, Postgres, Redis and Ollama.
+services:
+  obsidian:
+    image: lscr.io/linuxserver/obsidian:latest
+    environment:
+      PUID: ${OBSIDIAN_PUID}
+      PGID: ${OBSIDIAN_PGID}
+      TZ: ${TZ:-Europe/Zurich}
+      # Do not enable seccomp=unconfined unless a specific host diagnosis proves it necessary.
+      PIXELFLUX_WAYLAND: "true"
+    volumes:
+      - ${OBSIDIAN_VAULT_PATH}:/vault:rw
+      - ${OBSIDIAN_CONFIG_PATH}:/config:rw
+    ports:
+      # HTTPS only; access remotely through an SSH tunnel in phase 1.
+      - "127.0.0.1:${OBSIDIAN_HTTPS_PORT:-3001}:3001"
+    networks:
+      - obsidian-ui-net
+    shm_size: "1gb"
+    restart: unless-stopped
+
+networks:
+  # Separate bridge network: Obsidian is never joined to the Honcho service network.
+  # Do not use `internal: true`; Docker Desktop does not publish the localhost UI
+  # port reliably from an internal network.
+  obsidian-ui-net:
+    driver: bridge

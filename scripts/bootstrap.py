@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import secrets
+import os
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
@@ -13,6 +14,8 @@ if target.exists():
 
 content = source.read_text()
 content = content.replace("REPLACE_WITH_A_LONG_RANDOM_SECRET", secrets.token_urlsafe(32))
+content = content.replace("LOCAL_UID", str(os.getuid()))
+content = content.replace("LOCAL_GID", str(os.getgid()))
 target.write_text(content)
 target.chmod(0o600)
 print(f"Created {target} with mode 0600.")
