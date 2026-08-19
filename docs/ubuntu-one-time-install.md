@@ -43,6 +43,17 @@ sudo ./scripts/install-ubuntu-stack.sh giovanni
 
 The command will prompt only in your own SSH terminal for your sudo password. The assistant never receives it.
 
+## Recovering an interrupted first install
+
+If the first installer run stopped before the service launch, update the staging directory from the assistant and run:
+
+```bash
+cd ~/honcho-hermes-stack-staging
+sudo ./scripts/install-ubuntu-stack.sh giovanni --resume
+```
+
+`--resume` preserves the already-generated server `.env` and continues only the installer-owned deployment. It does not delete or replace an established deployment unless you explicitly use this recovery mode.
+
 ## Rollback
 
 ```bash
