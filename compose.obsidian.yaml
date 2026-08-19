@@ -2,7 +2,7 @@
 # Deliberately isolated from Honcho, Postgres, Redis and Ollama.
 services:
   obsidian:
-    image: lscr.io/linuxserver/obsidian:latest
+    image: lscr.io/linuxserver/obsidian@sha256:c6c86336a2cf57506b0db2beb09ef4a50170808820a59c20063e669d12122dd4
     environment:
       PUID: ${OBSIDIAN_PUID}
       PGID: ${OBSIDIAN_PGID}

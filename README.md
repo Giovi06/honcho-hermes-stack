@@ -97,7 +97,7 @@ docker compose -f compose.obsidian.yaml up -d
 # browse https://localhost:3001 and choose /vault
 ```
 
-The Obsidian GUI binds to localhost only and must be accessed remotely through SSH forwarding in phase 1. It is intentionally on a separate Docker network from Honcho. See [docs/obsidian-and-sync.md](docs/obsidian-and-sync.md) for SSH, Syncthing and security details.
+The Obsidian GUI binds to localhost only and must be accessed remotely through SSH forwarding in phase 1. It is intentionally on a separate Docker network from Honcho. Its image is pinned by digest and should only be upgraded after a reviewed local validation. See [docs/obsidian-and-sync.md](docs/obsidian-and-sync.md) for SSH, Syncthing and security details.
 
 ## Ubuntu Server deployment
 

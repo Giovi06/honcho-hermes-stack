@@ -2,7 +2,7 @@
 # The GUI is localhost-only. Peer sync uses mutually approved Syncthing device IDs.
 services:
   syncthing:
-    image: lscr.io/linuxserver/syncthing:latest
+    image: lscr.io/linuxserver/syncthing@sha256:9e9b931bf48a8a08bffaaa7e2fc2b7d0126b02def2bf1d3395d9b531817f9af3
     hostname: hermes-vault
     environment:
       PUID: ${SYNCTHING_PUID}
