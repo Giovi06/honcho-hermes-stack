@@ -19,11 +19,13 @@ services:
     depends_on:
       ollama:
         condition: service_started
-    entrypoint: ["/bin/sh", "-ec"]
-    command: |
-      until ollama list >/dev/null 2>&1; do sleep 2; done
-      ollama pull "$${LOCAL_CHAT_MODEL}"
-      ollama pull "$${LOCAL_EMBEDDING_MODEL}"
+    entrypoint:
+      - /bin/sh
+      - -ec
+      - |
+        until ollama list >/dev/null 2>&1; do sleep 2; done
+        ollama pull "$${LOCAL_CHAT_MODEL}"
+        ollama pull "$${LOCAL_EMBEDDING_MODEL}"
     restart: "no"
 
 volumes:
