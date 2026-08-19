@@ -95,8 +95,8 @@ Next verification commands:
   docker compose -f compose.syncthing.yaml ps
 
 SSH tunnel from the Mac for Obsidian:
-  ssh -N -L 3001:127.0.0.1:3001 $ADMIN_USER@192.168.1.132
+  ssh -N -L 18401:127.0.0.1:18401 $ADMIN_USER@192.168.1.132
 
 SSH tunnel from the Mac for Syncthing administration:
-  ssh -N -L 8384:127.0.0.1:8384 $ADMIN_USER@192.168.1.132
+  ssh -N -L 18402:127.0.0.1:18402 $ADMIN_USER@192.168.1.132
 EOF

@@ -14,11 +14,10 @@ services:
       - ${OBSIDIAN_VAULT_PATH}:/data/vault:rw
     ports:
       # Administration UI: only through local browser / SSH tunnel.
-      - "127.0.0.1:${SYNCTHING_GUI_PORT:-8384}:8384"
-      # Sync transport and local discovery: private LAN only; restrict with host firewall.
-      - "${SYNCTHING_LISTEN_BIND:-0.0.0.0}:${SYNCTHING_LISTEN_PORT:-22000}:22000/tcp"
-      - "${SYNCTHING_LISTEN_BIND:-0.0.0.0}:${SYNCTHING_LISTEN_PORT:-22000}:22000/udp"
-      - "${SYNCTHING_LISTEN_BIND:-0.0.0.0}:${SYNCTHING_DISCOVERY_PORT:-21027}:21027/udp"
+      - "127.0.0.1:${SYNCTHING_GUI_PORT:-18402}:8384"
+      # Manual paired-device transport only (no LAN discovery port is published).
+      - "${SYNCTHING_LISTEN_BIND:-0.0.0.0}:${SYNCTHING_LISTEN_PORT:-18403}:22000/tcp"
+      - "${SYNCTHING_LISTEN_BIND:-0.0.0.0}:${SYNCTHING_LISTEN_PORT:-18403}:22000/udp"
     networks:
       - syncthing-net
     restart: unless-stopped

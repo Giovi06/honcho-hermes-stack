@@ -14,7 +14,7 @@ services:
       - ${OBSIDIAN_CONFIG_PATH}:/config:rw
     ports:
       # HTTPS only; access remotely through an SSH tunnel in phase 1.
-      - "127.0.0.1:${OBSIDIAN_HTTPS_PORT:-3001}:3001"
+      - "127.0.0.1:${OBSIDIAN_HTTPS_PORT:-18401}:3001"
     networks:
       - obsidian-ui-net
     shm_size: "1gb"
