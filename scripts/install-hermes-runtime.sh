@@ -7,6 +7,8 @@ HERMES_USER="hermes"
 HERMES_HOME="/srv/hermes/home/.hermes"
 HERMES_OS_HOME="/srv/hermes/home"
 HERMES_BIN="$HERMES_OS_HOME/.local/bin/hermes"
+HERMES_SOURCE_ARCHIVE="${HERMES_SOURCE_ARCHIVE:-/home/giovanni/hermes-agent-source.tar.gz}"
+HERMES_SOURCE_DIR="$HERMES_HOME/hermes-agent"
 
 if [ "$(id -u)" -ne 0 ]; then
   echo "Run with sudo: sudo $0" >&2
@@ -26,21 +28,43 @@ if ! command -v node >/dev/null || ! command -v npm >/dev/null; then
 fi
 
 if [ ! -x "$HERMES_BIN" ]; then
-  # Do not inherit the administrator staging directory: uv treats a nearby
-  # .venv as a project environment and may be unable to inspect it as hermes.
-  runuser -u "$HERMES_USER" -- env \
-    HOME="$HERMES_OS_HOME" \
-    HERMES_HOME="$HERMES_HOME" \
-    PATH="$HERMES_OS_HOME/.local/bin:/usr/local/bin:/usr/bin:/bin" \
-    bash -c 'cd "$HOME" && curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash'
+  # Prefer the clean source archive staged from the administrator's verified
+  # workstation checkout. This avoids GitHub HTTP 429 and transfers no local
+  # credentials, Git metadata, virtualenvs, node_modules or local changes.
+  if [ -f "$HERMES_SOURCE_ARCHIVE" ]; then
+    test ! -e "$HERMES_SOURCE_DIR" || { echo "Unexpected existing source: $HERMES_SOURCE_DIR" >&2; exit 1; }
+    install -d -o "$HERMES_USER" -g "$HERMES_USER" -m 0750 "$HERMES_SOURCE_DIR"
+    tar -xzf "$HERMES_SOURCE_ARCHIVE" -C "$HERMES_SOURCE_DIR"
+    chown -R "$HERMES_USER:$HERMES_USER" "$HERMES_SOURCE_DIR"
+  else
+    # Fallback for a normal network path when no staged source is present.
+    runuser -u "$HERMES_USER" -- env \
+      HOME="$HERMES_OS_HOME" \
+      HERMES_HOME="$HERMES_HOME" \
+      PATH="$HERMES_HOME/bin:$HERMES_HOME/node/bin:$HERMES_OS_HOME/.local/bin:/usr/local/bin:/usr/bin:/bin" \
+      bash -c 'cd "$HOME" && curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash'
+  fi
 fi
 
-# Install web, pseudo-terminal and messaging dependencies for remote Desktop + Telegram.
+test -f "$HERMES_SOURCE_DIR/pyproject.toml" || { echo 'Hermes source is incomplete.' >&2; exit 1; }
+test -x "$HERMES_HOME/bin/uv" || { echo 'Managed uv is missing.' >&2; exit 1; }
+test -x "$HERMES_HOME/node/bin/node" || { echo 'Managed Node 26 is missing.' >&2; exit 1; }
+
+# Build a fresh Linux venv; never copy a macOS venv or node_modules.
 runuser -u "$HERMES_USER" -- env \
   HOME="$HERMES_OS_HOME" \
   HERMES_HOME="$HERMES_HOME" \
-  PATH="$HERMES_OS_HOME/.local/bin:/usr/local/bin:/usr/bin:/bin" \
-  bash -c 'cd "$HERMES_HOME/hermes-agent" && uv pip install -e ".[all]"'
+  PATH="$HERMES_HOME/bin:$HERMES_HOME/node/bin:$HERMES_OS_HOME/.local/bin:/usr/local/bin:/usr/bin:/bin" \
+  bash -c 'cd "$HERMES_HOME/hermes-agent" && "$HERMES_HOME/bin/uv" venv .venv --python 3.11 && "$HERMES_HOME/bin/uv" pip install -e ".[all]"'
+
+# Provide the managed CLI launcher normally created by the official installer.
+install -d -o "$HERMES_USER" -g "$HERMES_USER" -m 0750 "$HERMES_OS_HOME/.local/bin"
+cat > "$HERMES_BIN" <<EOF
+#!/bin/sh
+exec "$HERMES_SOURCE_DIR/.venv/bin/python" -m hermes_cli.main "\$@"
+EOF
+chown "$HERMES_USER:$HERMES_USER" "$HERMES_BIN"
+chmod 0750 "$HERMES_BIN"
 
 # The vault path is non-secret runtime configuration used by the documentation skill.
 install -d -o "$HERMES_USER" -g "$HERMES_USER" -m 0750 "$HERMES_HOME"
