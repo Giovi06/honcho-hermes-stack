@@ -77,16 +77,21 @@ Start a **new** Hermes session after setup. Tell it a unique preference, wait ab
 docker compose logs --tail=100 deriver
 ```
 
-# Optional deployment assets
+## Optional deployment assets
 
 - `compose.ollama.yaml` — optional all-container Ollama for Ubuntu
 - `compose.obsidian.yaml` — isolated browser-accessed Obsidian UI
 - `compose.syncthing.yaml` — optional Mac/server vault synchronization between paired devices
 - `vault-seed/` — versioned Markdown folder layout and templates
 - `scripts/init-vault.py` — non-destructive vault initialization
+- `repository-template/` — portable `docs/` structure plus path-scoped GitHub Copilot instructions
+- `hermes-skill/repository-documentation/` — final orchestrator documentation stage
+- `hermes-skill/docs-merge-conflict-resolver/` — semantic Markdown three-way merge workflow
 - `scripts/provision-server-storage.sh` — restricted Hermes Unix user plus vault permissions
 - `scripts/backup-vault.sh` / `scripts/restore-vault-check.sh` — filesystem backup and restore verification
 - `hermes-skill/project-knowledge-base/` — installable Hermes project-documentation behavior
+
+The personal knowledge vault and repository documentation have different sources of truth. Durable documentation about a codebase belongs in that repository's `docs/` folder and is reviewed with the code. The personal vault may link to approved work material, but it must not become an unreviewed copy of company documentation. See [the repository documentation proof of concept](docs/repository-documentation-poc.md).
 
 ## Obsidian and synchronized vault
 

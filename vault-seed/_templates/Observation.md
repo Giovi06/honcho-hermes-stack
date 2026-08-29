@@ -1,6 +1,6 @@
 ---
 type: observation
-created: {{date:YYYY-MM-DD}}
+created: "{{date:YYYY-MM-DD}}"
 tags: [observation]
 ---
 

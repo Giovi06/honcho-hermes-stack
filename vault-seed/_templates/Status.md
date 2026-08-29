@@ -1,7 +1,7 @@
 ---
 type: status
 status: active
-updated: {{date:YYYY-MM-DD}}
+updated: "{{date:YYYY-MM-DD}}"
 tags: [status]
 ---
 

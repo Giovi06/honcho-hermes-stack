@@ -1,7 +1,7 @@
 ---
 type: project
 status: active
-created: {{date:YYYY-MM-DD}}
+created: "{{date:YYYY-MM-DD}}"
 owner: Giovanni
 related_services: []
 tags: [project]

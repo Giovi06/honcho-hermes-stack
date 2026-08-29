@@ -9,6 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SEED = ROOT / "vault-seed"
+IGNORED_NAMES = {".DS_Store"}
 FOLDERS = (
     "00 Inbox",
     "01 Projects",
@@ -45,7 +46,7 @@ def main() -> None:
     for folder in FOLDERS:
         (vault / folder).mkdir(parents=True, exist_ok=True)
     for source in SEED.rglob("*"):
-        if source.is_file():
+        if source.is_file() and source.name not in IGNORED_NAMES:
             copy_if_missing(source, vault / source.relative_to(SEED))
     print(f"Vault ready: {vault}")
 

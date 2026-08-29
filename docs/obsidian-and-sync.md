@@ -45,3 +45,11 @@ Before pairing, configure Syncthing GUI authentication. Then configure the Mac d
 ```
 
 Do not ignore `.obsidian/` wholesale: selected plugins, themes and core vault settings may be intentionally shared later. Resolve conflicts deliberately—Obsidian Markdown is not a collaborative real-time editor.
+
+## Repository documentation at work
+
+Keep company repository documentation in each repository's `docs/` folder and synchronize it with the company's normal Git remote. Do not copy it into this personal/server vault or synchronize it through this Syncthing deployment unless company policy explicitly approves that data flow.
+
+For the proof of concept, a developer can use Obsidian's **Open folder as vault** action on a repository's `docs/` directory. Obsidian supports multiple vaults, so each repository can remain isolated while using the same installed application. The repository template ignores `.obsidian/` because vault registration, workspace layout, recent files, and plugin state are machine-local. Essential repository documentation must remain readable in GitHub and VS Code without Obsidian.
+
+See [Repository documentation proof of concept](repository-documentation-poc.md) for the recommended structure, orchestrator stage, GitHub Copilot integration, and conflict policy.

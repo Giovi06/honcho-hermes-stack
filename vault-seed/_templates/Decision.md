@@ -1,7 +1,7 @@
 ---
 type: decision
 status: accepted
-created: {{date:YYYY-MM-DD}}
+created: "{{date:YYYY-MM-DD}}"
 tags: [decision]
 ---
 
